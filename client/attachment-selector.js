@@ -223,9 +223,9 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   }
 
   async onCreateAttachment(e) {
-    var { name, description, categoryId } = e.detail
+    var { name, description, category, file } = e.detail
 
-    await this.createAttachment(name, description, categoryId)
+    await this.createAttachment(name, description, category, file)
     this.refreshAttachments()
   }
 
@@ -275,12 +275,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     return attachmentListResponse.data.attachments.items
   }
 
-  async createAttachment(name, description, category) {
-    var model = JSON.stringify({
-      width: 800,
-      height: 600
-    })
-
+  async createAttachment(name, description, category, file) {
     const response = await client.mutate({
       mutation: CREATE_ATTACHMENT_GQL,
       variables: {
@@ -288,7 +283,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           name,
           description,
           category,
-          model
+          file
         }
       }
     })
