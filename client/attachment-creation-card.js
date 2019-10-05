@@ -117,10 +117,11 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
           <input type="text" name="description" />
 
           <label>${i18next.t('label.category')}</label>
-          <select .value=${this.defaultCategory} name="categoryId">
+          <select .value=${this.defaultCategory} name="category">
+            <option value="">--${i18next.t('text.please choose a category')}--</option>
             ${categories.map(
               category => html`
-                <option value=${category.id} ?selected=${this.defaultCategory == category.id}>${category.name}</option>
+                <option value=${category} ?selected=${this.defaultCategory == category}>${category}</option>
               `
             )}
           </select>
@@ -150,14 +151,14 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
 
     var name = form.elements['name'].value
     var description = form.elements['description'].value
-    var categoryId = form.elements['categoryId'].value
+    var category = form.elements['category'].value
 
     this.dispatchEvent(
       new CustomEvent('create-attachment', {
         detail: {
           name,
           description,
-          categoryId
+          category
         }
       })
     )

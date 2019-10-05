@@ -136,12 +136,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   constructor() {
     super()
 
-    this.categories = ['image', 'font', 'document', 'video'].map((mediatype, index) => {
-      return {
-        id: mediatype,
-        description: mediatype
-      }
-    })
+    this.categories = ['image', 'font', 'document', 'video']
     this.attachments = []
 
     this._page = 1
@@ -162,7 +157,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           <option value="">--${i18next.t('text.please choose a category')}--</option>
           ${this.categories.map(
             category => html`
-              <option value=${category.id}>${category.description}</option>
+              <option value=${category}>${category}</option>
             `
           )}
         </select>

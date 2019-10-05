@@ -1,4 +1,6 @@
 {
+  "label.category": "category",
+  "label.file": "file",
   "text.create attachment": "create attachment",
   "text.please choose a category": "please choose a category"
 }
