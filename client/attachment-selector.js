@@ -5,7 +5,9 @@ import { css, html, LitElement } from 'lit-element'
 import gql from 'graphql-tag'
 import { client, gqlBuilder, InfiniteScrollable, ScrollbarStyles } from '@things-factory/shell'
 import './attachment-creation-card'
-import { AttachmentImporter } from './attachment-importer'
+import ClipboardJS from 'clipboard'
+
+const GRAPHQL_URI = '/graphql'
 
 const FETCH_ATTACHMENT_LIST_GQL = listParam => {
   return gql`
@@ -34,6 +36,20 @@ const CREATE_ATTACHMENT_GQL = gql`
       mimetype
       encoding
       category
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+const UPLOAD_ATTACHMENT_GQL = `
+  mutation($file: Upload!) {
+    singleUpload(file: $file) {
+      id
+      name
+      mimetype
+      encoding
+      path
       createdAt
       updatedAt
     }
@@ -101,6 +117,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           color: #fff;
           text-indent: 7px;
         }
+
         #main .card img {
           max-height: 100%;
           min-height: 100%;
@@ -111,9 +128,11 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           background-color: #fff;
           box-shadow: var(--box-shadow);
         }
+
         #filter * {
           font-size: 15px;
         }
+
         select {
           text-transform: capitalize;
           float: right;
@@ -176,15 +195,21 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                 .categories=${this.categories}
                 .defaultCategory=${this.category}
                 @create-attachment=${e => this.onCreateAttachment(e)}
+                @attachment-dropped=${e => this.onAttachmentDropped(e)}
               ></attachment-creation-card>
             `
           : html``}
         ${this.attachments.map(
           attachment => html`
-            <div class="card" @click=${e => this.onClickSelect(attachment)}>
-              <img src=${attachment.thumbnail} />
+            <div
+              class="card"
+              data-clipboard-text=${`/attachments/${attachment.id}`}
+              @click=${e => this.onClickSelect(attachment)}
+            >
+              <img src=${`/attachments/${attachment.id}`} />
               <div class="name">${attachment.name}</div>
               <div class="description">${attachment.description}</div>
+              <mwc-icon class="clipboard"></mwc-icon>
             </div>
           `
         )}
@@ -200,8 +225,21 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     return this.appendAttachments()
   }
 
-  firstUpdated() {
-    AttachmentImporter.set(this)
+  connectedCallback() {
+    super.connectedCallback()
+
+    this._clipboard = new ClipboardJS('.clipboard', {
+      container: this,
+      target: function(trigger) {
+        trigger.parentElement
+      }
+    })
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback()
+
+    this._clipboard.destroy()
   }
 
   updated(changed) {
@@ -226,6 +264,44 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     var { name, description, category, file } = e.detail
 
     await this.createAttachment(name, description, category, file)
+    this.refreshAttachments()
+  }
+
+  async onAttachmentDropped(e) {
+    var files = e.detail
+    console.log('onAttachmentDropped', e.detail)
+
+    /*
+      ref. https://github.com/jaydenseric/graphql-multipart-request-spec#client
+        - TODO support multiple file upload
+    */
+
+    for (let file of files) {
+      console.log('file', file)
+      let o = {
+        query: UPLOAD_ATTACHMENT_GQL,
+        variables: {
+          file: null
+        }
+      }
+
+      let map = {
+        '0': ['variables.file']
+      }
+
+      let fd = new FormData()
+      fd.append('operations', JSON.stringify(o))
+      fd.append('map', JSON.stringify(map))
+      fd.append(0, file)
+
+      const response = await fetch(GRAPHQL_URI, {
+        method: 'POST',
+        body: fd
+      })
+
+      await response.json()
+    }
+
     this.refreshAttachments()
   }
 

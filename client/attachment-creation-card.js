@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 import { i18next, localize } from '@things-factory/i18n-base'
+import { AttachmentImporter } from './attachment-importer'
 
 export class AttachmentCreationCard extends localize(i18next)(LitElement) {
   static get properties() {
@@ -48,32 +49,43 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
         }
+
         [front] {
           text-align: center;
           font-size: 0.8em;
           color: var(--card-list-create-color);
           text-transform: capitalize;
         }
+
+        [front].candrop {
+          background-color: tomato;
+          cursor: pointer;
+        }
+
         [front] mwc-icon {
           margin-top: 15%;
           display: block;
           font-size: 3.5em;
           color: var(--card-list-create-icon-color);
         }
+
         [back] {
           -webkit-transform: var(--card-list-flip-transform);
           transform: var(--card-list-flip-transform);
         }
+
         [back] form {
           padding: var(--card-list-create-form-padding);
           display: flex;
           flex-flow: row wrap;
         }
+
         [back] form label {
           flex: 1 1 25%;
           font: var(--card-list-create-label-font);
           color: var(--card-list-create-label-color);
         }
+
         [back] form input,
         [back] form select {
           flex: 1 1 60%;
@@ -85,9 +97,11 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
           font: var(--card-list-create-input-font);
           color: var(--card-list-create-input-color);
         }
+
         form * {
           margin: var(--card-list-create-margin);
         }
+
         input[type='submit'] {
           background-color: var(--button-background-color) !important;
           margin: var(--button-margin);
@@ -135,8 +149,16 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
     `
   }
 
+  firstUpdated() {
+    // AttachmentImporter.set(this.shadowRoot.querySelector('[front]'))
+    AttachmentImporter.set(this)
+  }
+
   onClickFlip(e) {
-    if (e.currentTarget.hasAttribute('front') || e.target.hasAttribute('back')) {
+    if (
+      e.currentTarget.hasAttribute('front') ||
+      (e.currentTarget.hasAttribute('back') && e.target.tagName != 'INPUT' && e.target.tagName != 'SELECT')
+    ) {
       this.classList.toggle('flipped')
     }
 
@@ -152,13 +174,15 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
     var name = form.elements['name'].value
     var description = form.elements['description'].value
     var category = form.elements['category'].value
+    var file = form.elements['file'].value
 
     this.dispatchEvent(
       new CustomEvent('create-attachment', {
         detail: {
           name,
           description,
-          category
+          category,
+          file
         }
       })
     )
