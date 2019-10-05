@@ -44,6 +44,22 @@ const CREATE_ATTACHMENT_GQL = gql`
   }
 `
 
+const DELETE_ATTACHMENT_GQL = gql`
+  mutation DeleteAttachment($id: String!) {
+    deleteAttachment(id: $id) {
+      id
+      name
+      description
+      mimetype
+      encoding
+      category
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 const UPLOAD_ATTACHMENT_GQL = `
   mutation($file: Upload!) {
     singleUpload(file: $file) {
@@ -106,7 +122,8 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
 
         #main .card > .name {
           background-color: rgba(1, 126, 127, 0.8);
-          margin-top: -35px;
+          position: absolute;
+          bottom: 0px;
           width: 100%;
           color: #fff;
           font-weight: bolder;
@@ -114,24 +131,23 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           text-indent: 7px;
         }
 
-        #main .card > .description {
-          background-color: rgba(0, 0, 0, 0.7);
-          width: 100%;
-          min-height: 15px;
-          font-size: 0.6rem;
-          color: #fff;
-          text-indent: 7px;
-        }
-
-        #main .card img {
+        #main .card img,
+        #main .card video {
           max-height: 100%;
           min-height: 100%;
         }
 
-        #main .clipboard {
+        #main [clipboard] {
           position: absolute;
 
           top: 0px;
+          right: 0px;
+        }
+
+        #main [delete] {
+          position: absolute;
+
+          top: 36px;
           right: 0px;
         }
 
@@ -167,7 +183,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   constructor() {
     super()
 
-    this.categories = ['image', 'font', 'document', 'video']
+    this.categories = ['audio', 'video', 'image', 'text', 'application']
     this.attachments = []
 
     this._page = 1
@@ -218,10 +234,23 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
               data-clipboard-text=${`/attachment/${attachment.path}`}
               @click=${e => this.onClickSelect(attachment)}
             >
-              <img src=${`/attachment/${attachment.path}`} />
+              ${attachment.category == 'image'
+                ? html`
+                    <img src=${`/attachment/${attachment.path}`} />
+                  `
+                : attachment.category == 'video'
+                ? html`
+                    <video src=${`/attachment/${attachment.path}`} controls></video>
+                  `
+                : html`
+                    <img
+                      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                      @click=${e => window.open(`/attachment/${attachment.path}`)}
+                    />
+                  `}
               <div class="name">${attachment.name}</div>
-              <div class="description">${attachment.description}</div>
-              <mwc-icon class="clipboard">file_copy</mwc-icon>
+              <mwc-icon class="clipboard" clipboard>file_copy</mwc-icon>
+              <mwc-icon @click=${e => this.onDeleteAttachment(attachment.id)} delete>delete</mwc-icon>
             </div>
           `
         )}
@@ -274,6 +303,12 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     var { name, description, category, file } = e.detail
 
     await this.createAttachment(name, description, category, file)
+    this.refreshAttachments()
+  }
+
+  async onDeleteAttachment(id) {
+    await this.deleteAttachment(id)
+
     this.refreshAttachments()
   }
 
@@ -371,6 +406,17 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           category,
           file
         }
+      }
+    })
+
+    return response.data
+  }
+
+  async deleteAttachment(id) {
+    const response = await client.mutate({
+      mutation: DELETE_ATTACHMENT_GQL,
+      variables: {
+        id
       }
     })
 
