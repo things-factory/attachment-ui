@@ -153,7 +153,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
 
         #filter {
           padding: var(--popup-content-padding);
-          background-color: #fff;
+          background-color: var(--attachment-tools-background-color);
           box-shadow: var(--box-shadow);
         }
 
