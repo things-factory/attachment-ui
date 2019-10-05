@@ -20,6 +20,7 @@ const FETCH_ATTACHMENT_LIST_GQL = listParam => {
         mimetype
         encoding
         category
+        path
       }
       total
     }
@@ -36,6 +37,7 @@ const CREATE_ATTACHMENT_GQL = gql`
       mimetype
       encoding
       category
+      path
       createdAt
       updatedAt
     }
@@ -49,6 +51,7 @@ const UPLOAD_ATTACHMENT_GQL = `
       name
       mimetype
       encoding
+      category
       path
       createdAt
       updatedAt
@@ -89,6 +92,8 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           overflow: hidden;
           border-radius: var(--card-list-border-radius);
           background-color: var(--card-list-background-color);
+
+          position: relative;
         }
 
         #main .card.create {
@@ -121,6 +126,13 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
         #main .card img {
           max-height: 100%;
           min-height: 100%;
+        }
+
+        #main .clipboard {
+          position: absolute;
+
+          top: 0px;
+          right: 0px;
         }
 
         #filter {
@@ -203,13 +215,13 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           attachment => html`
             <div
               class="card"
-              data-clipboard-text=${`/attachments/${attachment.id}`}
+              data-clipboard-text=${`/attachment/${attachment.path}`}
               @click=${e => this.onClickSelect(attachment)}
             >
-              <img src=${`/attachments/${attachment.id}`} />
+              <img src=${`/attachment/${attachment.path}`} />
               <div class="name">${attachment.name}</div>
               <div class="description">${attachment.description}</div>
-              <mwc-icon class="clipboard"></mwc-icon>
+              <mwc-icon class="clipboard">file_copy</mwc-icon>
             </div>
           `
         )}
@@ -225,11 +237,9 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     return this.appendAttachments()
   }
 
-  connectedCallback() {
-    super.connectedCallback()
-
+  firstUpdated() {
     this._clipboard = new ClipboardJS('.clipboard', {
-      container: this,
+      container: this.shadowRoot.querySelector('#main'),
       target: function(trigger) {
         trigger.parentElement
       }
