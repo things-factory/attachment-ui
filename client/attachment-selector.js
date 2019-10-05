@@ -17,6 +17,7 @@ const FETCH_ATTACHMENT_LIST_GQL = listParam => {
         description
         mimetype
         encoding
+        category
       }
       total
     }
@@ -24,26 +25,15 @@ const FETCH_ATTACHMENT_LIST_GQL = listParam => {
 `
 }
 
-const FETCH_ATTACHMENT_CATEGORY_LIST_GQL = gql`
-  {
-    categories {
-      items {
-        id
-        name
-        description
-      }
-      total
-    }
-  }
-`
-
 const CREATE_ATTACHMENT_GQL = gql`
   mutation CreateAttachment($attachment: NewAttachment!) {
     createAttachment(attachment: $attachment) {
       id
       name
       description
-      model
+      mimetype
+      encoding
+      category
       createdAt
       updatedAt
     }
@@ -146,7 +136,12 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   constructor() {
     super()
 
-    this.categories = []
+    this.categories = ['image', 'font', 'document', 'video'].map((mediatype, index) => {
+      return {
+        id: mediatype,
+        description: mediatype
+      }
+    })
     this.attachments = []
 
     this._page = 1
@@ -211,7 +206,6 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   }
 
   firstUpdated() {
-    this.refreshCategories()
     AttachmentImporter.set(this)
   }
 
@@ -240,19 +234,6 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     this.refreshAttachments()
   }
 
-  async refreshCategories() {
-    var categoryListResponse = await client.query({
-      query: FETCH_ATTACHMENT_CATEGORY_LIST_GQL
-    })
-
-    if (!categoryListResponse || !categoryListResponse.data) return
-
-    var categories = categoryListResponse.data.categories.items
-    this.categories = [...categories]
-
-    this.category = categories.filter(category => category.id == this.category).length > 0 ? this.category : ''
-  }
-
   async refreshAttachments() {
     var attachments = await this.getAttachments()
     this.attachments = [...attachments]
@@ -278,7 +259,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
 
     if (this.category)
       filters.push({
-        name: 'category_id',
+        name: 'category',
         operator: 'eq',
         value: this.category
       })
@@ -299,7 +280,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     return attachmentListResponse.data.attachments.items
   }
 
-  async createAttachment(name, description, categoryId) {
+  async createAttachment(name, description, category) {
     var model = JSON.stringify({
       width: 800,
       height: 600
@@ -311,7 +292,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
         attachment: {
           name,
           description,
-          categoryId,
+          category,
           model
         }
       }
