@@ -98,6 +98,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
 
         #main .card.create {
           overflow: visible;
+          background-color: initial;
         }
 
         #main .card:hover {
