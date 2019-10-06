@@ -135,7 +135,7 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
           </select>
 
           <label>${i18next.t('label.file')}</label>
-          <input type="file" name="file" />
+          <input type="file" name="file" multiple />
 
           <input type="submit" value=${i18next.t('button.create')} />
         </form>
