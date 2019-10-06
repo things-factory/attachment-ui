@@ -274,7 +274,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                 : html`
                     <div etc>
                       <mwc-icon outlined>insert_drive_file</mwc-icon>
-                      <span>${attachment.mimetype.split('/')[1]}</span>
+                      <span>${attachment.path.substr(attachment.path.lastIndexOf('.'))}</span>
                     </div>
                   `}
               <div class="name">${attachment.name}</div>
