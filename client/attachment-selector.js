@@ -3,9 +3,8 @@ import '@things-factory/setting-base'
 import { css, html, LitElement } from 'lit-element'
 
 import gql from 'graphql-tag'
-import { client, gqlBuilder, InfiniteScrollable, ScrollbarStyles } from '@things-factory/shell'
+import { client, gqlBuilder, InfiniteScrollable, ScrollbarStyles, sleep } from '@things-factory/shell'
 import './attachment-creation-card'
-import ClipboardJS from 'clipboard'
 
 const FETCH_ATTACHMENT_LIST_GQL = listParam => {
   return gql`
@@ -63,6 +62,25 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     return [
       ScrollbarStyles,
       css`
+        [data-tooltip]:after {
+          position: absolute;
+          content: attr(data-tooltip);
+          background-color: black;
+          color: #fff;
+          z-index: 1;
+          pointer-events: none;
+          display: block;
+
+          bottom: auto;
+          left: auto;
+          top: 0%;
+          right: 100%;
+
+          width: 100%;
+          text-align: center;
+        }
+      `,
+      css`
         :host {
           display: grid;
           grid-template-rows: auto auto 1fr;
@@ -116,6 +134,11 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           text-indent: 7px;
         }
 
+        [show] {
+          max-height: 100%;
+          min-height: 100%;
+        }
+
         .card img,
         .card video {
           max-height: 100%;
@@ -133,17 +156,21 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           font: var(--attachment-selector-icon-font);
           color: var(--attachment-selector-icon-color);
         }
+
         mwc-icon:hover,
         mwc-icon:active {
           background-color: var(--primary-color);
           color: #fff;
         }
+
         [clipboard] {
           top: 0px;
         }
+
         [delete] {
           top: 35px;
         }
+
         [download] {
           top: 70px;
           border-bottom-left-radius: 12px;
@@ -163,15 +190,18 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           text-transform: capitalize;
           float: right;
         }
+
         [etc] mwc-icon:hover,
         [etc] mwc-icon:active {
           background-color: initial;
           color: initial;
         }
+
         [etc] {
           margin: auto;
           position: relative;
         }
+
         [etc] mwc-icon {
           position: initial;
           opacity: 0.2;
@@ -256,34 +286,33 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
               ></attachment-creation-card>
             `
           : html``}
-        ${this.attachments.map(
-          attachment => html`
-            <div
-              class="card"
-              data-clipboard-text=${`/attachment/${attachment.path}`}
-              @click=${e => this.onClickSelect(attachment)}
-            >
-              ${attachment.category == 'image'
-                ? html`
-                    <img src=${`/attachment/${attachment.path}`} />
-                  `
-                : attachment.category == 'video'
-                ? html`
-                    <video src=${`/attachment/${attachment.path}`} controls></video>
-                  `
-                : html`
-                    <div etc>
-                      <mwc-icon outlined>insert_drive_file</mwc-icon>
-                      <span>${attachment.path.substr(attachment.path.lastIndexOf('.'))}</span>
-                    </div>
-                  `}
+        ${this.attachments.map(attachment => {
+          var url = `/attachment/${attachment.path}`
+          return html`
+            <div class="card" @click=${e => this.onClickSelect(attachment)}>
+              <a target="_blank" href=${url} show>
+                ${attachment.category == 'image'
+                  ? html`
+                      <img src=${url} />
+                    `
+                  : attachment.category == 'video'
+                  ? html`
+                      <video src=${url} controls></video>
+                    `
+                  : html`
+                      <div etc>
+                        <mwc-icon outlined>insert_drive_file</mwc-icon>
+                        <span>${attachment.path.substr(attachment.path.lastIndexOf('.'))}</span>
+                      </div>
+                    `}
+              </a>
               <div class="name">${attachment.name}</div>
-              <mwc-icon class="clipboard" clipboard>link</mwc-icon>
+              <mwc-icon data-clipboard-url=${url} clipboard>link</mwc-icon>
               <mwc-icon @click=${e => this.onDeleteAttachment(attachment.id)} delete>delete</mwc-icon>
-              <mwc-icon download>save_alt</mwc-icon>
+              <a href=${url} download=${attachment.name}><mwc-icon download>save_alt</mwc-icon></a>
             </div>
           `
-        )}
+        })}
       </div>
     `
   }
@@ -297,20 +326,20 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   }
 
   firstUpdated() {
-    this._clipboard = new ClipboardJS('.clipboard', {
-      container: this.shadowRoot.querySelector('#main'),
-      target: function(trigger) {
-        trigger.parentElement
+    this.refreshAttachments()
+
+    this.shadowRoot.addEventListener('click', async e => {
+      var target = e.target
+      var url = target.getAttribute('data-clipboard-url')
+      if (url) {
+        var { protocol, hostname, port } = location
+        await this.copy(`${protocol}//${hostname}:${port}${url}`)
+
+        target.setAttribute('data-tooltip', 'url copied!')
+        await sleep(10000)
+        target.removeAttribute('data-tooltip')
       }
     })
-
-    this.refreshAttachments()
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback()
-
-    this._clipboard.destroy()
   }
 
   updated(changed) {
@@ -430,6 +459,21 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     })
 
     return response.data
+  }
+
+  async copy(copied) {
+    var textArea = document.createElement('textarea')
+    textArea.style.position = 'absolute'
+    textArea.style.opacity = '0'
+    textArea.value = copied
+    document.body.appendChild(textArea)
+
+    await sleep(100)
+
+    textArea.select()
+
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
   }
 }
 
