@@ -58,9 +58,9 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
           text-transform: capitalize;
         }
 
-        [front].candrop {
+        :host(.candrop) [front],
+        :host(.candrop) [back] {
           background-color: tomato;
-          cursor: pointer;
         }
 
         [front] mwc-icon {
@@ -145,7 +145,6 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
   }
 
   firstUpdated() {
-    // AttachmentImporter.set(this.shadowRoot.querySelector('[front]'))
     AttachmentImporter.set(this)
   }
 
