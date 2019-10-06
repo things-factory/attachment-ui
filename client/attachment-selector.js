@@ -246,8 +246,9 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                     />
                   `}
               <div class="name">${attachment.name}</div>
-              <mwc-icon class="clipboard" clipboard>file_copy</mwc-icon>
+              <mwc-icon class="clipboard" clipboard>link</mwc-icon>
               <mwc-icon @click=${e => this.onDeleteAttachment(attachment.id)} delete>delete</mwc-icon>
+              <mwc-icon download>save_alt</mwc-icon>
             </div>
           `
         )}
