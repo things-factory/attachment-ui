@@ -28,22 +28,6 @@ const FETCH_ATTACHMENT_LIST_GQL = listParam => {
 `
 }
 
-const CREATE_ATTACHMENT_GQL = gql`
-  mutation CreateAttachment($attachment: NewAttachment!) {
-    createAttachment(attachment: $attachment) {
-      id
-      name
-      description
-      mimetype
-      encoding
-      category
-      path
-      createdAt
-      updatedAt
-    }
-  }
-`
-
 const DELETE_ATTACHMENT_GQL = gql`
   mutation DeleteAttachment($id: String!) {
     deleteAttachment(id: $id) {
@@ -60,6 +44,24 @@ const DELETE_ATTACHMENT_GQL = gql`
   }
 `
 
+/* should be without gql */
+const CREATE_ATTACHMENT_GQL = `
+  mutation($category: String, $file: Upload!) {
+    createAttachment(attachment: {category: $category, file: $file}) {
+      id
+      name
+      description
+      mimetype
+      encoding
+      category
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+/* should be without gql */
 const UPLOAD_ATTACHMENT_GQL = `
   mutation($file: Upload!) {
     singleUpload(file: $file) {
@@ -300,9 +302,9 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   }
 
   async onCreateAttachment(e) {
-    var { name, description, category, file } = e.detail
+    var { category, files } = e.detail
 
-    await this.createAttachment(name, description, category, file)
+    await this.createAttachment(category, files)
     this.refreshAttachments()
   }
 
@@ -322,7 +324,6 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     */
 
     for (let file of files) {
-      console.log('file', file)
       let o = {
         query: UPLOAD_ATTACHMENT_GQL,
         variables: {
@@ -396,20 +397,39 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
     return attachmentListResponse.data.attachments.items
   }
 
-  async createAttachment(name, description, category, file) {
-    const response = await client.mutate({
-      mutation: CREATE_ATTACHMENT_GQL,
-      variables: {
-        attachment: {
-          name,
-          description,
+  async createAttachment(category, files) {
+    /*
+      ref. https://github.com/jaydenseric/graphql-multipart-request-spec#client
+        - TODO support multiple file upload
+    */
+
+    for (let file of files) {
+      let o = {
+        query: CREATE_ATTACHMENT_GQL,
+        variables: {
           category,
-          file
+          file: null
         }
       }
-    })
 
-    return response.data
+      let map = {
+        file: ['variables.file']
+      }
+
+      let fd = new FormData()
+      fd.append('operations', JSON.stringify(o))
+      fd.append('map', JSON.stringify(map))
+      fd.append('file', file)
+
+      const response = await fetch(GRAPHQL_URI, {
+        method: 'POST',
+        body: fd
+      })
+
+      await response.json()
+    }
+
+    this.refreshAttachments()
   }
 
   async deleteAttachment(id) {

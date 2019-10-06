@@ -166,13 +166,13 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
     var form = e.target
 
     var category = form.elements['category'].value
-    var file = form.elements['file'].value
+    var files = form.elements['file'].files
 
     this.dispatchEvent(
       new CustomEvent('create-attachment', {
         detail: {
           category,
-          file
+          files
         }
       })
     )
