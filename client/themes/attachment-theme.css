@@ -8,4 +8,8 @@ body {
   --attachment-selector-icon-font: normal 20px/35px var(--mdc-icon-font, 'Material Icons');
   --attachment-selector-icon-color: var(--primary-color);
   --attachment-selector-icon-background-color: rgba(255, 255, 255, 0.85);
+  --attachment-selector-etc-background-color: var(--primary-color);
+  --attachment-selector-etc-font: bold 9px var(--theme-font);
+  --attachment-selector-etc-icon-font: normal 72px var(--mdc-icon-font, 'Material Icons');
+  --attachment-selector-etc-icon-color: var(--secondary-color);
 }

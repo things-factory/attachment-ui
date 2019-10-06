@@ -162,6 +162,37 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           text-transform: capitalize;
           float: right;
         }
+        [etc] mwc-icon:hover,
+        [etc] mwc-icon:active {
+          background-color: initial;
+          color: initial;
+        }
+        [etc] {
+          margin: auto;
+          position: relative;
+        }
+        [etc] mwc-icon {
+          position: initial;
+          opacity: 0.2;
+          width: initial;
+          height: initial;
+
+          font: var(--attachment-selector-etc-icon-font);
+          color: var(--attachment-selector-etc-icon-color);
+        }
+
+        [etc] span {
+          position: absolute;
+          bottom: 25px;
+          right: 8px;
+          padding: 1px 2px;
+          color: #fff;
+          text-transform: uppercase;
+          opacity: 0.8;
+
+          background-color: var(--attachment-selector-etc-background-color);
+          font: var(--attachment-selector-etc-font);
+        }
       `
     ]
   }
@@ -240,10 +271,10 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                     <video src=${`/attachment/${attachment.path}`} controls></video>
                   `
                 : html`
-                    <img
-                      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                      @click=${e => window.open(`/attachment/${attachment.path}`)}
-                    />
+                    <div etc>
+                      <mwc-icon outlined>insert_drive_file</mwc-icon>
+                      <span>.format</span>
+                    </div>
                   `}
               <div class="name">${attachment.name}</div>
               <mwc-icon class="clipboard" clipboard>link</mwc-icon>
