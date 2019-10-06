@@ -124,12 +124,6 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
 
       <div @click=${e => this.onClickFlip(e)} back>
         <form @submit=${e => this.onClickSubmit(e)}>
-          <label>${i18next.t('label.name')}</label>
-          <input type="text" name="name" />
-
-          <label>${i18next.t('label.description')}</label>
-          <input type="text" name="description" />
-
           <label>${i18next.t('label.category')}</label>
           <select .value=${this.defaultCategory} name="category">
             <option value="">--${i18next.t('text.please choose a category')}--</option>
@@ -171,16 +165,12 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
 
     var form = e.target
 
-    var name = form.elements['name'].value
-    var description = form.elements['description'].value
     var category = form.elements['category'].value
     var file = form.elements['file'].value
 
     this.dispatchEvent(
       new CustomEvent('create-attachment', {
         detail: {
-          name,
-          description,
           category,
           file
         }
