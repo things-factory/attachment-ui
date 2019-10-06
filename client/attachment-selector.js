@@ -90,7 +90,8 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           align-items: center;
           overflow: hidden;
           border-radius: var(--card-list-border-radius);
-          background-color: var(--card-list-background-color);
+          border: var(--attachment-selector-border);
+          background-color: var(--attachment-selector-background-color);
 
           position: relative;
         }
@@ -103,35 +104,48 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           cursor: pointer;
         }
 
-        #main .card > .name {
+        .name {
           background-color: rgba(1, 126, 127, 0.8);
           position: absolute;
           bottom: 0px;
           width: 100%;
+          padding: 2px 5px;
+          font: var(--attachment-selector-name-font);
           color: #fff;
-          font-weight: bolder;
-          font-size: 13px;
           text-indent: 7px;
         }
 
-        #main .card img,
-        #main .card video {
+        .card img,
+        .card video {
           max-height: 100%;
           min-height: 100%;
         }
 
-        #main [clipboard] {
+        mwc-icon {
           position: absolute;
-
-          top: 0px;
           right: 0px;
+          text-align: center;
+
+          background-color: var(--attachment-selector-icon-background-color);
+          width: var(--attachment-selector-icon-size);
+          height: var(--attachment-selector-icon-size);
+          font: var(--attachment-selector-icon-font);
+          color: var(--attachment-selector-icon-color);
         }
-
-        #main [delete] {
-          position: absolute;
-
-          top: 36px;
-          right: 0px;
+        mwc-icon:hover,
+        mwc-icon:active {
+          background-color: var(--primary-color);
+          color: #fff;
+        }
+        [clipboard] {
+          top: 0px;
+        }
+        [delete] {
+          top: 35px;
+        }
+        [download] {
+          top: 70px;
+          border-bottom-left-radius: 12px;
         }
 
         #filter {

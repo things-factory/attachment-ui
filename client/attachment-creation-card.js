@@ -25,6 +25,7 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
           transform-style: preserve-3d;
           -webkit-transition: all 0.5s ease-in-out;
           transition: all 0.5s ease-in-out;
+          box-shadow: var(--box-shadow);
         }
 
         :host(.flipped) {
@@ -63,7 +64,7 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
         }
 
         [front] mwc-icon {
-          margin-top: 15%;
+          margin-top: 55px;
           display: block;
           font-size: 3.5em;
           color: var(--card-list-create-icon-color);

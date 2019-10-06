@@ -1,3 +1,11 @@
 body {
   --attachment-tools-background-color: var(--primary-color);
+
+  --attachment-selector-background-color: #fff;
+  --attachment-selector-name-font: bold 14px var(--theme-font);
+  --attachment-selector-border: 1px solid rgba(0, 0, 0, 0.2);
+  --attachment-selector-icon-size: 35px;
+  --attachment-selector-icon-font: normal 20px/35px var(--mdc-icon-font, 'Material Icons');
+  --attachment-selector-icon-color: var(--primary-color);
+  --attachment-selector-icon-background-color: rgba(255, 255, 255, 0.85);
 }
