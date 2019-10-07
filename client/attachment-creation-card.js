@@ -60,7 +60,8 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
 
         :host(.candrop) [front],
         :host(.candrop) [back] {
-          background-color: tomato;
+          border-width: 2px;
+          background-color: #fffde9;
         }
 
         [front] mwc-icon {
