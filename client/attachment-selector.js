@@ -65,19 +65,32 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
         [data-tooltip]:after {
           position: absolute;
           content: attr(data-tooltip);
-          background-color: black;
           color: #fff;
           z-index: 1;
           pointer-events: none;
           display: block;
+          text-transform: capitalize;
 
-          bottom: auto;
-          left: auto;
-          top: 0%;
-          right: 100%;
+          padding: var(--tooltip-padding);
+          background-color: var(--tooltip-background-color);
+          font: var(--tooltip-font);
+          box-shadow: var(--box-shadow);
+          border-radius: var(--border-radius);
 
-          width: 100%;
-          text-align: center;
+          left: var(--tooltip-left-positon-left);
+          top: var(--tooltip-left-position-top);
+          right: var(--tooltip-left-position-right);
+          animation: var(--tooltip-left-position-animation);
+        }
+        @keyframes tooltip-left {
+          0% {
+            opacity: 0;
+            right: 150%;
+          }
+          100% {
+            opacity: 1;
+            right: 110%;
+          }
         }
       `,
       css`
@@ -199,6 +212,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
 
         [etc] {
           margin: auto;
+          margin-top: 45px;
           position: relative;
         }
 
@@ -307,7 +321,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                     `}
               </a>
               <div class="name">${attachment.name}</div>
-              <mwc-icon data-clipboard-url=${url} clipboard>link</mwc-icon>
+              <mwc-icon data-clipboard-url=${url} clipboard title="oops">link</mwc-icon>
               <mwc-icon @click=${e => this.onDeleteAttachment(attachment.id)} delete>delete</mwc-icon>
               <a href=${url} download=${attachment.name}><mwc-icon download>save_alt</mwc-icon></a>
             </div>
