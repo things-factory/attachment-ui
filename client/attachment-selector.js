@@ -3,7 +3,7 @@ import '@things-factory/setting-base'
 import { css, html, LitElement } from 'lit-element'
 
 import gql from 'graphql-tag'
-import { client, gqlBuilder, InfiniteScrollable, ScrollbarStyles, sleep } from '@things-factory/shell'
+import { client, gqlBuilder, InfiniteScrollable, ScrollbarStyles, TooltipStyles, sleep } from '@things-factory/shell'
 import './attachment-creation-card'
 
 const FETCH_ATTACHMENT_LIST_GQL = listParam => {
@@ -61,38 +61,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   static get styles() {
     return [
       ScrollbarStyles,
-      css`
-        [data-tooltip]:after {
-          position: absolute;
-          content: attr(data-tooltip);
-          color: #fff;
-          z-index: 1;
-          pointer-events: none;
-          display: block;
-          text-transform: capitalize;
-
-          padding: var(--tooltip-padding);
-          background-color: var(--tooltip-background-color);
-          font: var(--tooltip-font);
-          box-shadow: var(--box-shadow);
-          border-radius: var(--border-radius);
-
-          left: var(--tooltip-left-positon-left);
-          top: var(--tooltip-left-position-top);
-          right: var(--tooltip-left-position-right);
-          animation: var(--tooltip-left-position-animation);
-        }
-        @keyframes tooltip-left {
-          0% {
-            opacity: 0;
-            right: 150%;
-          }
-          100% {
-            opacity: 1;
-            right: 110%;
-          }
-        }
-      `,
+      TooltipStyles,
       css`
         :host {
           display: grid;
@@ -350,7 +319,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
         await this.copy(`${protocol}//${hostname}:${port}${url}`)
 
         target.setAttribute('data-tooltip', 'url copied!')
-        await sleep(10000)
+        await sleep(2000)
         target.removeAttribute('data-tooltip')
       }
     })
