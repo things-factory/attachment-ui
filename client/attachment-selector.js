@@ -265,7 +265,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                 .categories=${this.categories}
                 .defaultCategory=${this.category}
                 @create-attachment=${e => this.onCreateAttachment(e)}
-                @attachment-dropped=${e => this.onAttachmentDropped(e)}
+                @file-drop=${e => this.onAttachmentDropped(e)}
               ></attachment-creation-card>
             `
           : html``}

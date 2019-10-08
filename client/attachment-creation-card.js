@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 import { i18next, localize } from '@things-factory/i18n-base'
-import { AttachmentImporter } from './attachment-importer'
+import { FileDropHelper } from '@things-factory/shell'
 import './components/file-selector'
 import '@things-factory/image-uploader-ui/client/image-upload-previewer'
 
@@ -211,7 +211,7 @@ export class AttachmentCreationCard extends localize(i18next)(LitElement) {
   }
 
   firstUpdated() {
-    AttachmentImporter.set(this)
+    FileDropHelper.set(this)
   }
 
   onClickFlip(e) {
