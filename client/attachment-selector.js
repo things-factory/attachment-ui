@@ -353,12 +353,9 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   async onCreateAttachment(e) {
     var { category, files } = e.detail
 
-    var fileArray = []
-    for (var i = 0; i < files.length; i++) {
-      fileArray.push(files[i])
-    }
+    files = Array.from(files)
 
-    await this.createAttachments(category, fileArray)
+    await this.createAttachments(category, files)
     this.refreshAttachments()
   }
 
