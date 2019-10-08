@@ -1,6 +1,7 @@
 {
   "label.category": "카테고리",
   "label.file": "파일",
+  "label.select file": "파일 선택",
   "text.create attachment": "첨부파일 생성",
   "text.please choose a category": "카테고리를 선택해주세요"
 }
