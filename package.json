@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/attachment-ui",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@things-factory/attachment-base": "*",
+    "@things-factory/image-uploader-ui": "^1.0.0",
     "@things-factory/layout-base": "*",
     "@things-factory/shell": "*"
   },
