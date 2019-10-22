@@ -246,7 +246,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           <option value="">--${i18next.t('text.please choose a category')}--</option>
           ${this.categories.map(
             category => html`
-              <option value=${category}>${category}</option>
+              <option value=${category} ?selected=${this.category == category}>${category}</option>
             `
           )}
         </select>
