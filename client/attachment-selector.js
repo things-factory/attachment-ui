@@ -145,16 +145,20 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           color: #fff;
         }
 
-        [clipboard] {
+        [open-in-new] {
           top: 0px;
         }
 
-        [delete] {
+        [clipboard] {
           top: 35px;
         }
 
-        [download] {
+        [delete] {
           top: 70px;
+        }
+
+        [download] {
+          top: 105px;
           border-bottom-left-radius: 12px;
         }
 
@@ -273,7 +277,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           var url = `/attachment/${attachment.path}`
           return html`
             <div class="card" @click=${e => this.onClickSelect(attachment)}>
-              <a target="_blank" href=${url} show>
+              <div show>
                 ${attachment.category == 'image'
                   ? html`
                       <img src=${url} />
@@ -288,7 +292,8 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
                         <span>${attachment.path.substr(attachment.path.lastIndexOf('.'))}</span>
                       </div>
                     `}
-              </a>
+              </div>
+              <a target="_blank" href=${url}><mwc-icon open-in-new>open_in_new</mwc-icon></a>
               <div class="name">${attachment.name}</div>
               <mwc-icon data-clipboard-url=${url} clipboard title="oops">link</mwc-icon>
               <mwc-icon @click=${e => this.onDeleteAttachment(attachment.id)} delete>delete</mwc-icon>
