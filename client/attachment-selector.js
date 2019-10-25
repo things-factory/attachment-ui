@@ -3,7 +3,15 @@ import '@things-factory/setting-base'
 import { css, html, LitElement } from 'lit-element'
 
 import gql from 'graphql-tag'
-import { client, gqlBuilder, InfiniteScrollable, ScrollbarStyles, TooltipStyles, sleep } from '@things-factory/shell'
+import {
+  client,
+  pulltorefresh,
+  gqlBuilder,
+  InfiniteScrollable,
+  ScrollbarStyles,
+  TooltipStyles,
+  sleep
+} from '@things-factory/shell'
 import './attachment-creation-card'
 
 const FETCH_ATTACHMENT_LIST_GQL = listParam => {
@@ -68,6 +76,8 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
           grid-template-rows: auto auto 1fr;
           overflow: hidden;
           background-color: var(--popup-content-background-color);
+
+          position: relative;
         }
 
         :host(.candrop) {
@@ -314,7 +324,15 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
   }
 
   firstUpdated() {
-    this.refreshAttachments()
+    var list = this.shadowRoot.querySelector('#main')
+
+    pulltorefresh({
+      container: this.shadowRoot,
+      scrollable: list,
+      refresh: () => {
+        return this.refreshAttachments()
+      }
+    })
 
     this.shadowRoot.addEventListener('click', async e => {
       var target = e.target
@@ -328,6 +346,8 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
         target.removeAttribute('data-tooltip')
       }
     })
+
+    this.refreshAttachments()
   }
 
   updated(changed) {
