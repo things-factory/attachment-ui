@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/attachment-ui",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -34,6 +34,6 @@
     "@things-factory/shell": "^1.0.0-alpha.1"
   },
   "devDependencies": {
-    "@things-factory/board-app": "*"
+    "@things-factory/board-app": "^1.0.0-alpha.1"
   }
 }
