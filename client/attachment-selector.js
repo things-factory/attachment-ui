@@ -284,7 +284,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
             `
           : html``}
         ${this.attachments.map(attachment => {
-          var url = `/attachment/${attachment.path}`
+          var url = attachment.path.indexOf('://') == -1 ? `/attachment/${attachment.path}` : attachment.path
           return html`
             <div class="card" @click=${e => this.onClickSelect(attachment)}>
               <div show>
