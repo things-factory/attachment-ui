@@ -25,6 +25,7 @@ const FETCH_ATTACHMENT_LIST_GQL = listParam => {
         mimetype
         encoding
         category
+        fullpath
         path
       }
       total
@@ -284,7 +285,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
             `
           : html``}
         ${this.attachments.map(attachment => {
-          var url = attachment.path.indexOf('://') == -1 ? `/attachment/${attachment.path}` : attachment.path
+          var url = attachment.fullpath
           return html`
             <div class="card" @click=${e => this.onClickSelect(attachment)}>
               <div show>
