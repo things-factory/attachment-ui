@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/attachment-ui",
-  "version": "1.0.0-alpha.6",
+  "version": "2.0.0",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -28,12 +28,12 @@
     "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert"
   },
   "dependencies": {
-    "@things-factory/attachment-base": "^1.0.0-alpha.1",
+    "@things-factory/attachment-base": "^2.0.0",
     "@things-factory/image-uploader-ui": "^1.1.0-alpha.1",
-    "@things-factory/layout-base": "^1.0.0-alpha.1",
-    "@things-factory/shell": "^1.0.0-alpha.1"
+    "@things-factory/layout-base": "^2.0.0",
+    "@things-factory/shell": "^2.0.0"
   },
   "devDependencies": {
-    "@things-factory/board-app": "^1.0.0-alpha.1"
+    "@things-factory/board-app": "^2.0.0"
   }
 }
