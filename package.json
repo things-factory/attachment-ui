@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@things-factory/attachment-base": "^2.0.0",
-    "@things-factory/image-uploader-ui": "^1.1.0-alpha.1",
+    "@things-factory/image-uploader-ui": "^2.0.0",
     "@things-factory/layout-base": "^2.0.0",
     "@things-factory/shell": "^2.0.0"
   },
