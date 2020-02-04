@@ -30,8 +30,7 @@
   "dependencies": {
     "@things-factory/attachment-base": "^2.0.0",
     "@things-factory/image-uploader-ui": "^2.0.0",
-    "@things-factory/layout-base": "^2.0.0",
-    "@things-factory/shell": "^2.0.0"
+    "@things-factory/layout-base": "^2.0.0"
   },
   "devDependencies": {
     "@things-factory/board-app": "^2.0.0"
