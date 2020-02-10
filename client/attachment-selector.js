@@ -3,15 +3,9 @@ import '@things-factory/setting-base'
 import { css, html, LitElement } from 'lit-element'
 
 import gql from 'graphql-tag'
-import {
-  client,
-  pulltorefresh,
-  gqlBuilder,
-  InfiniteScrollable,
-  ScrollbarStyles,
-  TooltipStyles,
-  sleep
-} from '@things-factory/shell'
+import { client, InfiniteScrollable } from '@things-factory/shell'
+import { ScrollbarStyles, TooltipStyles } from '@things-factory/styles'
+import { gqlBuilder, pulltorefresh, sleep } from '@things-factory/utils'
 import './attachment-creation-card'
 
 const FETCH_ATTACHMENT_LIST_GQL = listParam => {
