@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 import { i18next, localize } from '@things-factory/i18n-base'
-import { FileDropHelper } from '@things-factory/shell'
+import { FileDropHelper } from '@things-factory/utils'
 import './components/file-selector'
 import '@things-factory/image-uploader-ui/client/image-upload-previewer'
 
