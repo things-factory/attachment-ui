@@ -111,15 +111,18 @@ export class FileSelector extends LitElement {
           ?multiple=${this.multiple}
           hidden
           @change=${e => {
+            const el = e.currentTarget
             this.dispatchEvent(
               new CustomEvent('file-change', {
                 bubbles: true,
                 composed: true,
                 detail: {
-                  files: e.currentTarget.files
+                  files: el.files
                 }
               })
             )
+
+            el.value = null
           }}
         />
       </div>
