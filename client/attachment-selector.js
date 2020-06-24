@@ -1,6 +1,4 @@
 import { i18next, localize } from '@things-factory/i18n-base'
-// CONFIRM-ME 여기서 @things-factory/setting-base 모듈이 사용되는가 ?
-import '@things-factory/setting-base'
 import { css, html, LitElement } from 'lit-element'
 
 import gql from 'graphql-tag'
