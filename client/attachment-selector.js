@@ -1,4 +1,5 @@
 import { i18next, localize } from '@things-factory/i18n-base'
+// CONFIRM-ME 여기서 @things-factory/setting-base 모듈이 사용되는가 ?
 import '@things-factory/setting-base'
 import { css, html, LitElement } from 'lit-element'
 
@@ -254,9 +255,7 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
         >
           <option value="">--${i18next.t('text.please choose a category')}--</option>
           ${this.categories.map(
-            category => html`
-              <option value=${category} ?selected=${this.category == category}>${category}</option>
-            `
+            category => html` <option value=${category} ?selected=${this.category == category}>${category}</option> `
           )}
         </select>
       </div>
@@ -284,13 +283,9 @@ export class AttachmentSelector extends InfiniteScrollable(localize(i18next)(Lit
             <div class="card" @click=${e => this.onClickSelect(attachment)}>
               <div show>
                 ${attachment.category == 'image'
-                  ? html`
-                      <img src=${url} />
-                    `
+                  ? html` <img src=${url} /> `
                   : attachment.category == 'video'
-                  ? html`
-                      <video src=${url} controls></video>
-                    `
+                  ? html` <video src=${url} controls></video> `
                   : html`
                       <div etc>
                         <mwc-icon outlined>insert_drive_file</mwc-icon>
